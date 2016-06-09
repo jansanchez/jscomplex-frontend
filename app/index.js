@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+
 // Imports
 import path from 'path';
 import express from 'express';

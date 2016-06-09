@@ -4,6 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "xo": "xo",
+    "prebabel": "npm run xo",
     "babel": "babel-node ./app/index.js --presets es2015",
     "browser": "browser-sync start --proxy 'localhost:3000' --files './app/'"
   },
@@ -17,6 +19,16 @@
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",
-    "babel-preset-es2015": "^6.9.0"
+    "babel-preset-es2015": "^6.9.0",
+    "xo": "^0.15.1"
+  },
+  "xo": {
+    "esnext": true,
+    "rules": {
+      "babel/new-cap": 0,
+      "no-undef": 0,
+      "indent": 0,
+      "no-unused-vars": 0
+    }
   }
 }
