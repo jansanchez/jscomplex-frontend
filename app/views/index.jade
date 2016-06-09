@@ -4,4 +4,10 @@ html
     title #{title}
     link(href='css/styles.css', media='all', rel='stylesheet', type='text/css')
   body
-    p hola mundo!
+    div
+      h1 Project's List
+    div
+      ul
+      - if (projects)
+        - each project in projects
+          li #{project.name}
