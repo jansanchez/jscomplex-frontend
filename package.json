@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "server": "babel-node ./app/index.js --presets es2015"
+    "babel": "babel-node ./app/index.js --presets es2015",
+    "browser": "browser-sync start --proxy 'localhost:3000' --files './app/'"
   },
   "keywords": [],
   "author": "@jansanchez",
