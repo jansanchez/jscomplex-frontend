@@ -1,0 +1,25 @@
+extends layout
+block content
+  div.wrapper
+    .container-fluid
+      div.row
+        p &nbsp;
+      div.row
+        .col-lg-4
+          .panel.panel-default
+            .panel-heading
+              h2 Add New Project
+            .panel-body
+              form(role='form', action="/new-project", method="post")
+                fieldset
+                  .form-group
+                    label Name
+                    input.form-control(name="name", placeholder='Enter Name')
+                  .form-group
+                    label Path
+                    input.form-control(name="path", placeholder='Enter Path')
+                  .checkbox
+                    label
+                      input(name="recursive", type='checkbox', checked)
+                      | Recursive
+                  button.btn.btn-primary(type='submit') Create

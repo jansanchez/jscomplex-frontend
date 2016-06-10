@@ -4,8 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "xo": "xo",
-    "prebabel": "npm run xo",
+    "xo": "xo ./app/controllers/*.js",
     "babel": "babel-node ./app/index.js --presets es2015",
     "browser": "browser-sync start --proxy 'localhost:3000' --files './app/'"
   },
@@ -13,8 +12,10 @@
   "author": "@jansanchez",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.15.1",
     "express": "^4.13.4",
     "jade": "^1.11.0",
+    "jscomplex": "^1.1.0",
     "mongoose": "^4.4.20"
   },
   "devDependencies": {

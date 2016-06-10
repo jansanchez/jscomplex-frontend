@@ -20,3 +20,35 @@ exports.index = (request, response, next) => {
   };
   const projects = Project.find(gotProjects);
 };
+
+exports.newProject = (request, response, next) => {
+  if (request.method === 'POST') {
+    const name = request.body.name;
+    const path = request.body.path;
+    let recursive = false;
+
+    if (request.body.recursive === 'on'){
+      recursive = true;
+    };
+    const project = new Project({
+        name: name,
+        path: path,
+        recursive: recursive
+    });
+    const onSaved = (err) => {
+      if (err) {
+        console.log(err)
+        return next(err)
+      }
+      return response.redirect('/');
+    };
+    project.save(onSaved);
+  } else {
+    return response.render('new-project', {title: 'New Project'});
+  }
+};
+
+/*
+exports.postNewProject = (request, response, next) => {
+
+};*/

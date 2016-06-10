@@ -1,0 +1,22 @@
+doctype html
+html
+  head
+    title #{title}
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+
+    //- Bootstrap Core CSS
+    link(href="bower_components/bootstrap/dist/css/bootstrap.min.css", rel="stylesheet")
+    //- MetisMenu CSS
+    link(href="bower_components/metisMenu/dist/metisMenu.min.css", rel="stylesheet")
+    //- DataTables CSS
+    link(href="bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css", rel="stylesheet")
+    //- DataTables Responsive CSS
+    //-link(href="bower_componentsaptitus/datatables-responsive/css/dataTables.responsive.css", rel="stylesheet")
+    link(href="css/dataTables.bootstrap.min.css", rel="stylesheet")
+    //- Custom CSS
+    link(href="css/sb-admin-2.css", rel="stylesheet")
+    link(href='css/bootstrap.min.css', media='all', rel='stylesheet', type='text/css')
+    //- Custom Fonts
+    link(href="bower_components/font-awesome/css/font-awesome.min.css", rel="stylesheet", type="text/css")
+  body
+    block content
