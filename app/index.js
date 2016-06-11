@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({
 app.get('/', project.index);
 app.get('/new-project', project.newProject);
 app.post('/new-project', project.newProject);
+app.get('/delete-project/:id', project.deleteProject);
 
 // Running the Express Server
 app.listen(port, () => {

@@ -10,22 +10,31 @@ block content
             .panel-heading
               h2 Project's List
             .panel-body
-              .table-responsive.table-bordered
-                table.table
-                  thead
-                    tr
-                      th Name
-                      th Path
-                      th Recursive
-                  tbody
-                  - each project in projects
-                    tr(id="#{project.id}")
-                      td #{project.name}
-                      td #{project.path}
-                      td #{project.recursive}
+              if projects
+                .table-responsive.table-bordered
+                  table.table
+                    thead
+                      tr
+                        th Name
+                        th Path
+                        th Recursive
+                        th Actions
+                    tbody
+                    - each project in projects
+                      tr(id="#{project.id}")
+                        td
+                          a(href="/project/#{project.id}", title="#{project.name}") #{project.name}
+                        td #{project.path}
+                        td #{project.recursive}
+                        td 
+                          a(href="/delete-project/#{project.id}", title="remove") remove
+              else
+                p You don't have any projects.
         .col-lg-4
           .panel.panel-default
             .panel-heading
               h2 Add New Project
             .panel-body
               a(href="/new-project") Add new project
+      if invalid
+        p.bg-danger El ID ingresado es inválido.
