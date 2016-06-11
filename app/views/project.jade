@@ -1,0 +1,34 @@
+extends layout
+block content
+  div.wrapper
+    .container-fluid
+      div.row
+        p &nbsp;
+      div.row
+        .col-lg-8
+          .panel.panel-default
+            .panel-heading
+              h2 Project's List
+            .panel-body
+              if projects
+                .table-responsive.table-bordered
+                  table.table
+                    thead
+                      tr
+                        th Name
+                        th Path
+                        th Recursive
+                        th Actions
+                    tbody
+                    - each project in projects
+                      tr(id="#{project.id}")
+                        td
+                          a(href="/project/#{project.id}", title="#{project.name}") #{project.name}
+                        td #{project.path}
+                        td #{project.recursive}
+                        td 
+                          a(href="/delete-project/#{project.id}", title="remove") remove
+              else
+                p You don't have any projects.
+      if invalid
+        p.bg-danger El ID ingresado es inválido.

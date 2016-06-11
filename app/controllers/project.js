@@ -12,24 +12,26 @@ const db = mongoose.createConnection(url);
 const Project = db.model('Project', projectSchema);
 
 exports.index = (request, response, next) => {
-  const gotProjects = (err, projects) => {
-    if (err) {
-      return err;
-    }
-    if (projects.length === 0){
-      projects = false;
-    }
-    const vars = {
-      title: 'Project\'s List',
-      projects
-    };
+  if (request.method === 'GET') {
+    const gotProjects = (err, projects) => {
+      if (err) {
+        return err;
+      }
+      if (projects.length === 0){
+        projects = false;
+      }
+      const vars = {
+        title: 'Project\'s List',
+        projects
+      };
 
-    if (request.query.invalid) {
-      vars.invalid = request.query.invalid;
-    }
-    return response.render('index', vars);
-  };
-  const projects = Project.find(gotProjects);
+      if (request.query.invalid) {
+        vars.invalid = request.query.invalid;
+      }
+      return response.render('index', vars);
+    };
+    const projects = Project.find(gotProjects);
+  }
 };
 
 exports.newProject = (request, response, next) => {
@@ -63,7 +65,7 @@ exports.deleteProject = (request, response, next) => {
   if (request.method === 'GET') {
     const id = request.params.id;
 
-    const gotProjects = (err, project) => {
+    const gotProject = (err, project) => {
       if (project === undefined || project === null ) {
         console.log('ID invalido');
         const string = encodeURIComponent('true');
@@ -88,7 +90,41 @@ exports.deleteProject = (request, response, next) => {
       project.remove(onRemoved);
     };
 
-    Project.findById(id, gotProjects);
+    Project.findById(id, gotProject);
 
   };
+};
+
+exports.viewProject = (request, response, next) => {
+  if (request.method === 'GET') {
+    const id = request.params.id;
+
+    const gotProject = (err, project) => {
+      if (project === undefined || project === null ) {
+        console.log('ID invalido');
+        const string = encodeURIComponent('true');
+        return response.redirect('/?invalid=' + string);
+      }
+
+      if (err) {
+        console.log('err 1');index
+        console.log(err);
+        return err;
+      }
+
+      const vars = {
+        title: 'Project: ' + project.name,
+        project
+      };
+
+      if (request.query.invalid) {
+        vars.invalid = request.query.invalid;
+      }
+
+      return response.render('project', vars);
+
+    };
+
+    Project.findById(id, gotProject);
+  }
 };
