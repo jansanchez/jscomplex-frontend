@@ -12,46 +12,45 @@ const db = mongoose.createConnection(url);
 const Project = db.model('Project', projectSchema);
 
 exports.index = (request, response, next) => {
-  if (request.method === 'GET') {
+  const {method, query} = request;
+  if (method === 'GET') {
     const gotProjects = (err, projects) => {
       if (err) {
+        console.log(err);
         return err;
       }
       if (projects.length === 0){
         projects = false;
       }
-      const vars = {
+      const variables = {
         title: 'Project\'s List',
         projects
       };
-
-      if (request.query.invalid) {
-        vars.invalid = request.query.invalid;
+      if (query.invalid) {
+        variables.invalid = query.invalid;
       }
-      return response.render('index', vars);
+      return response.render('index', variables);
     };
-    const projects = Project.find(gotProjects);
+    Project.find(gotProjects);
   }
 };
 
 exports.newProject = (request, response, next) => {
+  const {method, body} = request;
   if (request.method === 'POST') {
-    const name = request.body.name;
-    const path = request.body.path;
-    let recursive = false;
+    const {name, path, recursive} = body;
+    let isRecursive = false;
 
-    if (request.body.recursive === 'on'){
-      recursive = true;
+    if (recursive === 'on'){
+      isRecursive = true;
     };
     const project = new Project({
-        name: name,
-        path: path,
-        recursive: recursive
+        name, path, recursive: isRecursive
     });
     const onSaved = (err) => {
       if (err) {
-        console.log(err)
-        return next(err)
+        console.log(err);
+        return next(err);
       }
       return response.redirect('/');
     };
@@ -62,8 +61,9 @@ exports.newProject = (request, response, next) => {
 };
 
 exports.deleteProject = (request, response, next) => {
-  if (request.method === 'GET') {
-    const id = request.params.id;
+  const {method, params} = request;
+  if (method === 'GET') {
+    const {id} = params;
 
     const gotProject = (err, project) => {
       if (project === undefined || project === null ) {
@@ -86,18 +86,16 @@ exports.deleteProject = (request, response, next) => {
         }
         return response.redirect('/');
       };
-
       project.remove(onRemoved);
     };
-
     Project.findById(id, gotProject);
-
   };
 };
 
 exports.viewProject = (request, response, next) => {
-  if (request.method === 'GET') {
-    const id = request.params.id;
+  const {method, params, query} = request;
+  if (method === 'GET') {
+    const {id} = params;
 
     const gotProject = (err, project) => {
       if (project === undefined || project === null ) {
@@ -105,26 +103,20 @@ exports.viewProject = (request, response, next) => {
         const string = encodeURIComponent('true');
         return response.redirect('/?invalid=' + string);
       }
-
       if (err) {
-        console.log('err 1');index
+        console.log('err 1');
         console.log(err);
         return err;
       }
-
-      const vars = {
+      const variables = {
         title: 'Project: ' + project.name,
         project
       };
-
-      if (request.query.invalid) {
-        vars.invalid = request.query.invalid;
+      if (query.invalid) {
+        variables.invalid = query.invalid;
       }
-
-      return response.render('project', vars);
-
+      return response.render('project', variables);
     };
-
     Project.findById(id, gotProject);
   }
 };
