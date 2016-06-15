@@ -8,26 +8,27 @@ block content
         .col-lg-12
           .panel.panel-default
             .panel-heading
-              h2 Project: #{project.name}
+              h2
+                b Project: 
+                |#{project.name}
+              h4 
+                b Path: 
+                |#{project.path}
             .panel-body
-              if projects
+              if project
                 .table-responsive.table-bordered
                   table.table
                     thead
                       tr
-                        th Name
-                        th Path
-                        th Recursive
-                        th Actions
+                        th Date
+                        th # Files
+                        th Average MI
                     tbody
-                    - each project in projects
                       tr(id="#{project.id}")
                         td
-                          a(href="/project/#{project.id}", title="#{project.name}") #{project.name}
+                          a(href="/revision/#{project.id}", title="#{project.name}") #{project.name}
                         td #{project.path}
                         td #{project.recursive}
-                        td 
-                          a(href="/delete-project/#{project.id}", title="remove") remove
               else
                 p You don't have any projects.
       if invalid
