@@ -24,11 +24,11 @@ block content
                         th # Files
                         th Average MI
                     tbody
-                      tr(id="#{project.id}")
-                        td
-                          a(href="/revision/#{project.id}", title="#{project.name}") #{project.name}
-                        td #{project.path}
-                        td #{project.recursive}
+                    - each review, i in project.reviews
+                      tr
+                        td #{review.date}
+                        td _
+                        td __
               else
                 p You don't have any projects.
       if invalid

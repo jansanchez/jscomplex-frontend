@@ -4,6 +4,7 @@
 // Imports
 import mongoose from 'mongoose';
 import projectSchema from '../models/project';
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 // Connection URL
 const url = 'mongodb://localhost/jscomplex';
@@ -118,5 +119,53 @@ exports.viewProject = (request, response, next) => {
       return response.render('project', variables);
     };
     Project.findById(id, gotProject);
+  }
+};
+
+exports.scanProject = (request, response, next) => {
+  const {method, params, query} = request;
+  if (method === 'GET') {
+    const {id} = params;
+
+    const gotProject = (err, project) => {
+      if (project === undefined || project === null ) {
+        console.log('ID invalido');
+        const string = encodeURIComponent('true');
+        return response.redirect('/?invalid=' + string);
+      }
+      if (err) {
+        console.log('err 1');
+        console.log(err);
+        return err;
+      }
+      const variables = {
+        title: 'Project: ' + project.name,
+        project
+      };
+      if (query.invalid) {
+        variables.invalid = query.invalid;
+      }
+
+      console.log(typeof project.reviews);
+      console.log(project.reviews);
+
+      const review = {};
+
+      Project.update(
+        { '_id': id },
+        { '$push': { reviews: { review } } }
+        , (err, model) => {
+            if (err) {
+                console.log(err);
+            }
+            console.log('yay!');
+            //console.log(model);
+        }
+      );
+      return response.render('project', variables);
+    };
+
+    const projectResult = Project.findById(id, gotProject);
+
   }
 };
