@@ -25,8 +25,9 @@ block content
                         th Average MI
                     tbody
                     - each review, i in project.reviews
-                      tr
-                        td #{review.date}
+                      tr(id="#{review.id}")
+                        td
+                          a(href="/project-date/#{review.id}", title="#{review.date}") #{review.date}
                         td _
                         td __
               else

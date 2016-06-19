@@ -145,18 +145,15 @@ exports.scanProject = (request, response, next) => {
       if (query.invalid) {
         variables.invalid = query.invalid;
       }
-
-      console.log(typeof project.reviews);
-      console.log(project.reviews);
-
+      
       const review = {};
 
       Project.update(
         { '_id': id },
-        { '$push': { reviews: { review } } }
-        , (err, model) => {
+        { '$push': { reviews: { review } } },
+        (err, model) => {
             if (err) {
-                console.log(err);
+              console.log(err);
             }
             console.log('yay!');
             //console.log(model);
