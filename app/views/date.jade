@@ -13,23 +13,26 @@ block content
                 |#{project.name}
               h4 
                 b Path: 
-                |#{project.path}
+                |#{project.path} 
+                br 
+                br 
+                b Date: 
+                |#{date}
             .panel-body
               if project
                 .table-responsive.table-bordered
                   table.table
                     thead
                       tr
-                        th Date
-                        th # Files
-                        th Average MI
+                        th Path
+                        th MI
+                        th Magnitude
                     tbody
-                    - each review, i in project.reviews
-                      tr(id="#{review.id}")
-                        td
-                          a(href="/scan/#{project.id}/#{review.id}", title="#{review.date}") #{review.date}
-                        td #{review.files.length}
-                        td #{average[i].average}
+                    - each file, i in files
+                      tr(id="#{file.id}")
+                        td #{file.path}
+                        td #{file.mi}
+                        td #{file.magnitude}
               else
                 p You don't have any projects.
       if invalid

@@ -30,6 +30,7 @@ app.post('/new-project', project.newProject);
 app.get('/delete-project/:id', project.deleteProject);
 app.get('/project/:id', project.viewProject);
 app.get('/scan-project/:id', project.scanProject);
+app.get('/scan/:id/:id_date', project.scanDate);
 
 // Running the Express Server
 app.listen(port, () => {

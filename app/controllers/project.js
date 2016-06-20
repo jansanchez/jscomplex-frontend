@@ -150,8 +150,6 @@ exports.scanProject = (request, response, next) => {
 
     const gotProject = (err, project) => {
       if (project === undefined || project === null) {
-        console.log('ID invalido');
-        const string = encodeURIComponent('true');
         return response.redirect(`/?invalid=#{string}`);
       }
       if (err) {
@@ -159,8 +157,6 @@ exports.scanProject = (request, response, next) => {
         console.log(err);
         return err;
       }
-
-
 
       if (query.invalid) {
         variables.invalid = query.invalid;
@@ -216,6 +212,48 @@ exports.scanProject = (request, response, next) => {
 
       });
     };
+
+    const projectResult = Project.findById(id, gotProject);
+  }
+};
+
+exports.scanDate = (request, response, next) => {
+  const {method, params, query} = request;
+  if (method === 'GET') {
+    const {id, id_date} = params;
+
+    const gotProject = (err, project) => {
+      if (project === undefined || project === null) {
+        return response.redirect(`/?invalid=#{string}`);
+      }
+      if (err) {
+        console.log('err 1');
+        console.log(err);
+        return err;
+      }
+
+      let variables = {
+        title: `Project: #{project.name}`,
+        project
+      };
+
+      if (query.invalid) {
+        variables.invalid = query.invalid;
+      }
+
+      //console.log(project);
+      let current_data;
+      for (var i = 0; i < project.reviews.length; i++) {
+        if(id_date === project.reviews[i].id) {
+          current_data = project.reviews[i];
+        }
+      }
+
+      variables.date = current_data.date;
+      variables.files = current_data.files;
+
+      return response.render('date', variables);
+    }
 
     const projectResult = Project.findById(id, gotProject);
   }
