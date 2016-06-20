@@ -177,7 +177,12 @@ exports.scanProject = (request, response, next) => {
         project
       };
 
-      const complex = new JSComplex(project.path + '**/**/*.js', options);
+      let complex_path = project.path + '/*.js';
+      if (project.recursive) {
+        complex_path = project.path + '/**/**/*.js';
+      }
+
+      const complex = new JSComplex(complex_path, options);
       complex.process(data => {
         for (var i = 0; i < data.files.length; i++) {
           let file = new File({
