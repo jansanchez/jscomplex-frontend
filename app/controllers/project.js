@@ -4,13 +4,18 @@
 // Imports
 import mongoose from 'mongoose';
 import projectSchema from '../models/project';
+import fileSchema from '../models/file';
+import reviewSchema from '../models/review';
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 // Connection URL
 const url = 'mongodb://localhost/jscomplex';
 // Connect to the Server
 const db = mongoose.createConnection(url);
+
 const Project = db.model('Project', projectSchema);
+const Review = db.model('Review', reviewSchema);
+const File = db.model('File', fileSchema);
 
 exports.index = (request, response, next) => {
   const {method, query} = request;
@@ -145,20 +150,41 @@ exports.scanProject = (request, response, next) => {
       if (query.invalid) {
         variables.invalid = query.invalid;
       }
-      
-      const review = {};
 
+      let file = new File({
+        "path": "/var/aww/",
+        "mi": 152,
+        "magnitude": 8
+      });
+
+      const review = new Review({
+        files: []
+      });
+
+      // for
+      review.files.push(file);
+
+      //console.log(review);
+
+      project.reviews.push(review);
+      project.save(function() {
+        console.log("Grabo!!!");
+      });
+
+      /*
       Project.update(
         { '_id': id },
         { '$push': { reviews: { review } } },
-        (err, model) => {
+        (err, numAffected) => {
             if (err) {
               console.log(err);
             }
             console.log('yay!');
-            //console.log(model);
+            console.log(review);
         }
       );
+      */
+
       return response.render('project', variables);
     };
 
