@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import projectSchema from '../models/project';
 import fileSchema from '../models/file';
 import reviewSchema from '../models/review';
+import JSComplex from 'jscomplex';
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 // Connection URL
@@ -114,10 +115,25 @@ exports.viewProject = (request, response, next) => {
         console.log(err);
         return err;
       }
+
+      let average = [];
+      for (var i = 0; i < project.reviews.length; i++) {
+        let accumulator = 0;
+        let avg = 0;
+        for (var j = 0; j < project.reviews[i].files.length; j++) {
+          accumulator += project.reviews[i].files[j].mi;
+        }
+        avg = (accumulator / project.reviews[i].files.length).toFixed(2);
+        average.push({average: avg});
+      }
+
       const variables = {
         title: `Project: #{project.name}`,
-        project
+        project,
+        average
       };
+
+
       if (query.invalid) {
         variables.invalid = query.invalid;
       }
@@ -143,35 +159,60 @@ exports.scanProject = (request, response, next) => {
         console.log(err);
         return err;
       }
-      const variables = {
-        title: `Project: #{project.name}`,
-        project
-      };
+
+
+
       if (query.invalid) {
         variables.invalid = query.invalid;
       }
-
-      const file = new File({
-        path: '/var/aww/',
-        mi: 152,
-        magnitude: 8
-      });
 
       const review = new Review({
         files: []
       });
 
-      // for
-      review.files.push(file);
-
-      // console.log(review);
-
-      project.reviews.push(review);
-      project.save(() => {
-        console.log('Grabo!!!');
+      const file = new File({
+        path: '/var/www/',
+        mi: 160,
+        magnitude: 9
       });
 
-      return response.render('project', variables);
+      // for
+      review.files.push(file);
+      // console.log(review);
+
+      let average = [];
+
+      project.reviews.push(review);
+
+      let variables = {
+        title: `Project: #{project.name}`,
+        project
+      };
+
+      project.save(() => {
+
+        for (var i = 0; i < project.reviews.length; i++) {
+          let accumulator = 0;
+          let avg = 0;
+          for (var j = 0; j < project.reviews[i].files.length; j++) {
+            accumulator += project.reviews[i].files[j].mi;
+          }
+          avg = (accumulator / project.reviews[i].files.length).toFixed(2);
+          average.push({average: avg});
+        }
+        console.log('Grabo!!!')
+
+        variables.average = average;
+
+
+        return response.render('project', variables);
+      });
+
+
+
+
+
+
     };
 
     const projectResult = Project.findById(id, gotProject);
