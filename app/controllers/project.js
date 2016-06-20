@@ -170,49 +170,51 @@ exports.scanProject = (request, response, next) => {
         files: []
       });
 
-      const file = new File({
-        path: '/var/www/',
-        mi: 160,
-        magnitude: 9
-      });
-
-      // for
-      review.files.push(file);
-      // console.log(review);
+      const options = {
+        json: true,
+        maintainability: 171
+      };
 
       let average = [];
-
-      project.reviews.push(review);
-
       let variables = {
         title: `Project: #{project.name}`,
         project
       };
 
-      project.save(() => {
-
-        for (var i = 0; i < project.reviews.length; i++) {
-          let accumulator = 0;
-          let avg = 0;
-          for (var j = 0; j < project.reviews[i].files.length; j++) {
-            accumulator += project.reviews[i].files[j].mi;
-          }
-          avg = (accumulator / project.reviews[i].files.length).toFixed(2);
-          average.push({average: avg});
+      const complex = new JSComplex(project.path + '**/**/*.js', options);
+      complex.process(data => {
+        for (var i = 0; i < data.files.length; i++) {
+          let file = new File({
+            path: data.files[i].file,
+            mi: data.files[i].mi,
+            magnitude: data.files[i].magnitude
+          });
+          review.files.push(file);
         }
-        console.log('Grabo!!!')
 
-        variables.average = average;
+        project.reviews.push(review);
+
+        project.save(() => {
+
+          for (var i = 0; i < project.reviews.length; i++) {
+            let accumulator = 0;
+            let avg = 0;
+            for (var j = 0; j < project.reviews[i].files.length; j++) {
+              accumulator += project.reviews[i].files[j].mi;
+            }
+            avg = (accumulator / project.reviews[i].files.length).toFixed(2);
+            average.push({average: avg});
+          }
+
+          console.log('Grabo!!!')
+
+          variables.average = average;
+
+          return response.render('project', variables);
+        });
 
 
-        return response.render('project', variables);
       });
-
-
-
-
-
-
     };
 
     const projectResult = Project.findById(id, gotProject);
