@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "xo": "xo ./app/controllers/*.js",
+    "xo": "xo ./app/controllers/*.js ./app/models/*.js",
     "babel": "babel-node ./app/index.js --presets es2015",
     "browser": "browser-sync start --proxy 'localhost:3000' --files './app/'"
   },

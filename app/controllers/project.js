@@ -25,7 +25,7 @@ exports.index = (request, response, next) => {
         console.log(err);
         return err;
       }
-      if (projects.length === 0){
+      if (projects.length === 0) {
         projects = false;
       }
       const variables = {
@@ -47,13 +47,13 @@ exports.newProject = (request, response, next) => {
     const {name, path, recursive} = body;
     let isRecursive = false;
 
-    if (recursive === 'on'){
+    if (recursive === 'on') {
       isRecursive = true;
-    };
+    }
     const project = new Project({
         name, path, recursive: isRecursive
     });
-    const onSaved = (err) => {
+    const onSaved = err => {
       if (err) {
         console.log(err);
         return next(err);
@@ -72,10 +72,10 @@ exports.deleteProject = (request, response, next) => {
     const {id} = params;
 
     const gotProject = (err, project) => {
-      if (project === undefined || project === null ) {
+      if (project === undefined || project === null) {
         console.log('ID invalido');
         const string = encodeURIComponent('true');
-        return response.redirect('/?invalid=' + string);
+        return response.redirect(`/?invalid=#{string}`);
       }
 
       if (err) {
@@ -84,7 +84,7 @@ exports.deleteProject = (request, response, next) => {
         return err;
       }
 
-      const onRemoved = (err) => {
+      const onRemoved = err => {
         if (err) {
           console.log('err 2');
           console.log(err);
@@ -95,7 +95,7 @@ exports.deleteProject = (request, response, next) => {
       project.remove(onRemoved);
     };
     Project.findById(id, gotProject);
-  };
+  }
 };
 
 exports.viewProject = (request, response, next) => {
@@ -104,10 +104,10 @@ exports.viewProject = (request, response, next) => {
     const {id} = params;
 
     const gotProject = (err, project) => {
-      if (project === undefined || project === null ) {
+      if (project === undefined || project === null) {
         console.log('ID invalido');
         const string = encodeURIComponent('true');
-        return response.redirect('/?invalid=' + string);
+        return response.redirect(`/?invalid=#{string}`);
       }
       if (err) {
         console.log('err 1');
@@ -115,7 +115,7 @@ exports.viewProject = (request, response, next) => {
         return err;
       }
       const variables = {
-        title: 'Project: ' + project.name,
+        title: `Project: #{project.name}`,
         project
       };
       if (query.invalid) {
@@ -133,10 +133,10 @@ exports.scanProject = (request, response, next) => {
     const {id} = params;
 
     const gotProject = (err, project) => {
-      if (project === undefined || project === null ) {
+      if (project === undefined || project === null) {
         console.log('ID invalido');
         const string = encodeURIComponent('true');
-        return response.redirect('/?invalid=' + string);
+        return response.redirect(`/?invalid=#{string}`);
       }
       if (err) {
         console.log('err 1');
@@ -144,17 +144,17 @@ exports.scanProject = (request, response, next) => {
         return err;
       }
       const variables = {
-        title: 'Project: ' + project.name,
+        title: `Project: #{project.name}`,
         project
       };
       if (query.invalid) {
         variables.invalid = query.invalid;
       }
 
-      let file = new File({
-        "path": "/var/aww/",
-        "mi": 152,
-        "magnitude": 8
+      const file = new File({
+        path: '/var/aww/',
+        mi: 152,
+        magnitude: 8
       });
 
       const review = new Review({
@@ -164,31 +164,16 @@ exports.scanProject = (request, response, next) => {
       // for
       review.files.push(file);
 
-      //console.log(review);
+      // console.log(review);
 
       project.reviews.push(review);
-      project.save(function() {
-        console.log("Grabo!!!");
+      project.save(() => {
+        console.log('Grabo!!!');
       });
-
-      /*
-      Project.update(
-        { '_id': id },
-        { '$push': { reviews: { review } } },
-        (err, numAffected) => {
-            if (err) {
-              console.log(err);
-            }
-            console.log('yay!');
-            console.log(review);
-        }
-      );
-      */
 
       return response.render('project', variables);
     };
 
     const projectResult = Project.findById(id, gotProject);
-
   }
 };
